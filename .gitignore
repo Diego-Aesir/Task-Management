@@ -1,0 +1,16 @@
+**/bin/
+**/obj/
+
+
+*.user
+*.suo
+*.userosscache
+
+**/appsettings.json
+**/appsettings.Development.json
+
+**/Migrations/
+
+.vs/
+
+*.csproj.user
