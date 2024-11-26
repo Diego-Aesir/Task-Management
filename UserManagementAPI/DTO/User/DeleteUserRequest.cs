@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace UserManagementAPI.DTO
+namespace UserManagementAPI.DTO.User
 {
     public class DeleteUserRequest
     {

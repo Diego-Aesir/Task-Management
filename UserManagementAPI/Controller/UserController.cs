@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using UserManagementAPI.Interface;
-using UserManagementAPI.DTO;
+using UserManagementAPI.DTO.User;
 
 namespace UserManagementAPI.Controller
 {
@@ -10,7 +10,8 @@ namespace UserManagementAPI.Controller
     public class UserController : ControllerBase
     {
         IUserServices _userServices;
-        public UserController(IUserServices userServices) { 
+    
+        public UserController(IUserServices userServices) {
             _userServices = userServices;
         }
 
@@ -72,7 +73,7 @@ namespace UserManagementAPI.Controller
             }
 
             var userLogged = await _userServices.AuthenticateUserAsync(user.username, user.password);
-            if(userLogged == null)
+            if (userLogged == null)
             {
                 return BadRequest("User not couldn't be authenticated");
             }
@@ -119,12 +120,12 @@ namespace UserManagementAPI.Controller
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult> DeleteUser([FromBody] DeleteUserRequest deleteUserRequest)
         {
-            if(string.IsNullOrEmpty(deleteUserRequest.Id))
+            if (string.IsNullOrEmpty(deleteUserRequest.Id))
             {
                 return BadRequest("User ID is required.");
             };
-            
-            var userToBeDeleted = new User { Id = deleteUserRequest.Id, FirstName = "", LastName = ""};
+
+            var userToBeDeleted = new User { Id = deleteUserRequest.Id, FirstName = "", LastName = "" };
             try
             {
                 var result = await _userServices.DeleteUserAsync(userToBeDeleted);
@@ -143,5 +144,6 @@ namespace UserManagementAPI.Controller
                 return BadRequest($"Error deleting user: {ex.Message}");
             }
         }
+
     }
 }

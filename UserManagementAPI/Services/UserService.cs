@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using UserManagementAPI.Interface;
-using UserManagementAPI.DTO;
 using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.IdentityModel.Tokens.Jwt;
+using UserManagementAPI.DTO.User;
 
 namespace UserManagementAPI.Services
 {
@@ -20,7 +20,7 @@ namespace UserManagementAPI.Services
             _signInManager = signInManager;
             _config = config;
         }
-    
+
         public async Task<UserResponse> AuthenticateUserAsync(string userName, string password)
         {
             var user = await _manager.FindByNameAsync(userName);
@@ -59,7 +59,7 @@ namespace UserManagementAPI.Services
         {
             var user = await _manager.FindByIdAsync(userId);
 
-            if(user == null)
+            if (user == null)
             {
                 throw new Exception("Invalid user Id");
             }

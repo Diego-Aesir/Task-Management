@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace UserManagementAPI.DTO
+namespace UserManagementAPI.DTO.User
 {
     public class UserRequest
     {
@@ -21,7 +21,7 @@ namespace UserManagementAPI.DTO
         [Required]
         public string FirstName { get; set; }
 
-        [Required] 
+        [Required]
         public string LastName { get; set; }
     }
 }

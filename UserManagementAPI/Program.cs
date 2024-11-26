@@ -5,6 +5,9 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using UserManagementAPI.Interface;
 using UserManagementAPI.Services;
+using UserManagementAPI.Services.IdentityValidator;
+using UserManagementAPI.Services.RabbitMQ;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,6 +35,9 @@ builder.Services.AddScoped<IPasswordValidator<User>, PasswordValidator>();
 
 builder.Services.AddScoped<IUserServices, UserService>();
 
+builder.Services.AddSingleton<IRabbitTaskSender, RabbitTaskSenderService>();
+builder.Services.AddSingleton<IRabbitTaskReceiver, RabbitTaskReceiverService>();
+
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
@@ -40,14 +46,14 @@ builder.Services.AddSwaggerGen(options =>
     options.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
     {
         Title = "User Management API",
-        Version = "v1",
-        Description = "API for managing users in the system"
+        Version = "v2",
+        Description = "API for managing users in the system and tasks"
     });
 
     options.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
     {
         In = Microsoft.OpenApi.Models.ParameterLocation.Header,
-        Description = "Insira o token JWT no formato 'Bearer {token}'",
+        Description = "Insert JWT token as 'Bearer {token}'",
         Name = "Authorization",
         Type = Microsoft.OpenApi.Models.SecuritySchemeType.ApiKey,
         Scheme = "Bearer"
@@ -95,6 +101,12 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+var rabbitServiceSender = app.Services.GetRequiredService<IRabbitTaskSender>();
+await rabbitServiceSender.InitializeSenderServiceAsync();
+
+var rabbitServiceReceiver = app.Services.GetRequiredService<IRabbitTaskReceiver>();
+await rabbitServiceReceiver.InitializeReceiverServiceAsync();
 
 app.MapControllers();
 

@@ -1,4 +1,4 @@
-﻿using UserManagementAPI.DTO; 
+﻿using UserManagementAPI.DTO.User;
 
 namespace UserManagementAPI.Interface
 {

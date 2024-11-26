@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace UserManagementAPI.Services
+namespace UserManagementAPI.Services.IdentityValidator
 {
     public class UserValidator : IUserValidator<User>
     {
