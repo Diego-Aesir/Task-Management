@@ -2,7 +2,10 @@
 {
     public class AllTasksReceive
     {
-        public string userId {  get; set; }
-        public List<TaskReceive> tasks { get; set; }
+        public required string User_Id { get; set; }
+
+        public List<TaskReceive>? Tasks { get; set; }
+
+        public string? Error { get; set; }
     }
 }

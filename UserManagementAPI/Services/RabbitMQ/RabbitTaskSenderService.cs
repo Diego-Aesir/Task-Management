@@ -32,11 +32,10 @@ namespace UserManagementAPI.Services.RabbitMQ
                 await _channel.QueueDeclareAsync("create_task", durable: true, exclusive: false, autoDelete: false);
                 await _channel.QueueDeclareAsync("update_task", durable: true, exclusive: false, autoDelete: false);
                 await _channel.QueueDeclareAsync("delete_task", durable: true, exclusive: false, autoDelete: false);
-                await _channel.QueueDeclareAsync("due_date", durable: true, exclusive: false, autoDelete: false);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw new Exception("Couldn't stablish Rabbit Connection");
+                throw new Exception("Couldn't establish Rabbit Connection", ex);
             }
         }
 
@@ -79,16 +78,6 @@ namespace UserManagementAPI.Services.RabbitMQ
             }
             var body = Encoding.UTF8.GetBytes(message);
             await _channel.BasicPublishAsync(exchange: "", routingKey: "delete_task", body);
-        }
-
-        public async Task RequestDueDate(string message)
-        {
-            if (_channel == null || !_channel.IsOpen)
-            {
-                await InitializeSenderServiceAsync();
-            }
-            var body = Encoding.UTF8.GetBytes(message);
-            await _channel.BasicPublishAsync(exchange: "", routingKey: "due_date", body);
         }
 
         public async Task CloseConnection()

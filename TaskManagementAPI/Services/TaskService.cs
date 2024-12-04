@@ -47,12 +47,12 @@ namespace TaskManagementAPI.Services
             }
         }
 
-        public async Task<IEnumerable<Models.Task>> GetAllTasksAsync(int userId)
+        public async Task<IEnumerable<Models.Task>> GetAllTasksAsync(string userId)
         {
             try
             {
                 var tasks = await context.Tasks.Where(task => task.User_Id == userId).ToListAsync();
-                return tasks;
+                return tasks ?? new List<Models.Task>();
             }
             catch (Exception ex)
             {
@@ -60,7 +60,7 @@ namespace TaskManagementAPI.Services
             }
         }
 
-        public async Task<Models.Task> GetSingleTaskAsync(int userId, int taskId)
+        public async Task<Models.Task> GetSingleTaskAsync(string userId, int taskId)
         {
             try
             {

@@ -10,19 +10,19 @@ namespace TaskManagementAPI.Models
         [Required]
         public int Id { get; set; }
         [Required]
-        public string Title { set; get; }
-        public string? Description { set; get; }
+        public string Title { get; set; }
+        public string? Description { get; set; }
         [Required]
-        public DateTime CreationDate = DateTime.UtcNow;
+        public DateTime CreationDate { get; set; }
         [Required]
-        public string Status { set; get; }
+        public string Status { get; set; }
         [Required]
-        public DateTime DueDate { set; get; }
+        public DateTime DueDate { get; set; }
         [Required]
-        public int Priority { set; get; }
+        public int Priority { get; set; }
         [Required]
-        public bool IsCompleted { set; get; }
+        public bool IsCompleted { get; set; }
         [Required]
-        public int User_Id { set; get; }
+        public string User_Id { get; set; }
     }
 }

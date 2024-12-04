@@ -7,7 +7,6 @@
         Task RequestCreateTask(string message);
         Task RequestUpdateTask(string message);
         Task RequestDeleteTask(string message);
-        Task RequestDueDate(string message);
         Task CloseConnection();
     }
 }

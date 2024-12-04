@@ -10,6 +10,6 @@
         public DateTime DueDate { get; set; }
         public DateTime CreationDate { get; set; }
         public bool IsCompleted { get; set; }
-        public int User_Id { get; set; }
+        public string User_Id { get; set; }
     }
 }

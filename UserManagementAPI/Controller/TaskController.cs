@@ -20,7 +20,7 @@ namespace UserManagementAPI.Controller
         }
 
         [HttpPost("{userId}/GetAllTasks")]
-        [Authorize]
+        
         [ProducesResponseType(StatusCodes.Status202Accepted)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult> RequestAllTasks(string userId)
@@ -43,11 +43,15 @@ namespace UserManagementAPI.Controller
         public async Task<ActionResult> ReceiveAllTasks(string userId)
         {
             AllTasksReceive allTasks = await _rabbitTaskReceiver.RetrieveAllTasks(userId);
+            if (allTasks?.Error != null)
+            {
+                return BadRequest($"Rabbit Message couldn't be retrieved: {allTasks.Error}");
+            }
             if (allTasks == null)
             {
                 return BadRequest("Rabbit Message couldn't be retrieved");
             }
-            return Ok(allTasks);
+            return Ok(JsonSerializer.Serialize(allTasks));
         }
 
         [HttpPost("{userId}/CreateTask")]
@@ -58,7 +62,7 @@ namespace UserManagementAPI.Controller
         {
             try
             {
-                task.UserId = userId;
+                task.User_Id = userId;
                 await _rabbitTaskSender.RequestCreateTask(JsonSerializer.Serialize(task));
                 return Accepted("Task Creation Request sent successfully.");
             }
@@ -75,6 +79,10 @@ namespace UserManagementAPI.Controller
         public async Task<ActionResult> ReceiveCreateTask(string userId)
         {
             TaskReceive task = await _rabbitTaskReceiver.RetrieveCreatedTask(userId);
+            if (task?.Error != null)
+            {
+                return BadRequest($"Couldn't Retrieve Created Task: {task.Error}");
+            }
             if (task == null)
             {
                 return BadRequest("Couldn't Retrieve Created Task");
@@ -90,8 +98,8 @@ namespace UserManagementAPI.Controller
         {
             try
             {
-                taskUpdate.UserId = userId;
-                taskUpdate.TaskId = taskId;
+                taskUpdate.User_Id = userId;
+                taskUpdate.Id = taskId;
                 await _rabbitTaskSender.RequestUpdateTask(JsonSerializer.Serialize(taskUpdate));
                 return Accepted("Task Update Request sent successfully.");
             }
@@ -108,6 +116,10 @@ namespace UserManagementAPI.Controller
         public async Task<ActionResult> ReceiveUpdateTask(string userId, int taskId)
         {
             TaskReceive task = await _rabbitTaskReceiver.RetrieveUpdatedTask(userId, taskId);
+            if (task?.Error != null)
+            {
+                return BadRequest($"Couldn't Retrieve Updated Task: {task.Error}");
+            }
             if (task == null)
             {
                 return BadRequest("Couldn't Retrieve Updated Task");
@@ -123,7 +135,12 @@ namespace UserManagementAPI.Controller
         {
             try
             {
-                await _rabbitTaskSender.RequestDeleteTask(taskId.ToString());
+                var deleteTask = new
+                {
+                    User_Id = userId,
+                    Id = taskId
+                };
+                await _rabbitTaskSender.RequestDeleteTask(JsonSerializer.Serialize(deleteTask));
                 return Accepted("Task Delete Request sent successfully.");
             }
             catch (Exception ex)
@@ -139,11 +156,14 @@ namespace UserManagementAPI.Controller
         public async Task<ActionResult> ReceiveDeleteTask(string userId, int taskId)
         {
             TaskReceive task = await _rabbitTaskReceiver.RetrieveDeleteTaskResult(userId);
+            if (task?.Error != null)
+            {
+                return BadRequest($"Couldn't Retrieve Deleted Task: {task.Error}");
+            }
             if (task == null)
             {
                 return BadRequest("Couldn't Retrieve Deleted Task");
             }
-
             return Ok(task);
         }
     }

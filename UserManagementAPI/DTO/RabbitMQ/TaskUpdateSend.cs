@@ -4,9 +4,9 @@ namespace UserManagementAPI.DTO.RabbitMQ
 {
     public class TaskUpdateSend
     {
-        public string UserId { get; set; }
+        public int Id { get; set; }
 
-        public int TaskId { get; set; }
+        public string User_Id { get; set; }
 
         [Required]
         public string Title { get; set; }

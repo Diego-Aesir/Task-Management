@@ -35,7 +35,6 @@ namespace UserManagementAPI.Services.RabbitMQ
                 await _channel.QueueDeclareAsync("receive_task_creation", durable: true, exclusive: false, autoDelete: false);
                 await _channel.QueueDeclareAsync("receive_task_update", durable: true, exclusive: false, autoDelete: false);
                 await _channel.QueueDeclareAsync("receive_task_delete", durable: true, exclusive: false, autoDelete: false);
-                await _channel.QueueDeclareAsync("receive_next_task_due", durable: true, exclusive: false, autoDelete: false);
             }
             catch (Exception)
             {
@@ -62,8 +61,7 @@ namespace UserManagementAPI.Services.RabbitMQ
 
                 var message = Encoding.UTF8.GetString(eventArgs.Body.ToArray());
                 var tasks = JsonSerializer.Deserialize<AllTasksReceive>(message);
-                
-                if (tasks.userId != userId)
+                if (tasks.User_Id != userId)
                 {
                     return;
                 }
@@ -72,7 +70,7 @@ namespace UserManagementAPI.Services.RabbitMQ
                 tcs.SetResult(tasks);
             };
 
-            await _channel.BasicConsumeAsync("  ", autoAck: false, consumer: consumer);
+            await _channel.BasicConsumeAsync("receive_all_task", autoAck: false, consumer: consumer);
             return await tcs.Task;
         }
 
@@ -127,7 +125,7 @@ namespace UserManagementAPI.Services.RabbitMQ
 
                 var message = eventArgs.Body.ToArray();
                 var task = JsonSerializer.Deserialize<TaskReceive>(message);
-                if(task.User_Id != userId || task.Id != taskId)
+                if (task.User_Id != userId || task.Id != taskId)
                 {
                     return;
                 };
