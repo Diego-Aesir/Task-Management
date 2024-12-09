@@ -13,8 +13,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.WebHost.ConfigureKestrel(options =>
 {
-    options.ListenLocalhost(3000);
-    options.ListenLocalhost(3001, configure => configure.UseHttps());
+    options.ListenAnyIP(8080);
+    //options.ListenLocalhost(8081, configure => configure.UseHttps());
 });
 
 builder.Services.AddDbContext<UserDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));

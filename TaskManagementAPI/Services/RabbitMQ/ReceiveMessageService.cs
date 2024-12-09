@@ -26,9 +26,10 @@ namespace TaskManagementAPI.Services.RabbitMQ
         {
             var factory = new ConnectionFactory
             {
-                HostName = "localhost",
+                HostName = "rabbitmq",
                 UserName = "task_api",
                 Password = "api123",
+                Port = 5672
             };
 
             try

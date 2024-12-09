@@ -20,7 +20,7 @@ namespace UserManagementAPI.Controller
         }
 
         [HttpPost("{userId}/GetAllTasks")]
-        
+        [Authorize]
         [ProducesResponseType(StatusCodes.Status202Accepted)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult> RequestAllTasks(string userId)

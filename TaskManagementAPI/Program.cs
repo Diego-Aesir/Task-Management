@@ -9,8 +9,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.WebHost.ConfigureKestrel(options =>
 {
-    options.ListenLocalhost(8000);
-    options.ListenLocalhost(8001, listenOptions => listenOptions.UseHttps());
+    options.ListenAnyIP(8090);
+    //options.ListenLocalhost(8091, listenOptions => listenOptions.UseHttps());
 });
 
 builder.Services.AddDbContext<TaskDbContext>(options =>
